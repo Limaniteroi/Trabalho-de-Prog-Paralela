@@ -1,5 +1,4 @@
 # Trabalho de Programação Paralela
-### README.md
 
 ### **Análise de Paralelismo com MPI**
 
@@ -96,4 +95,4 @@ A tabela abaixo resume os resultados de desempenho para cada uma das versões pa
 
   * Marianna de Brito Lima
   * Rodrigo Ramos Vinagre Cavalcanti de Carvalho
-  * João Vitor
+  * João Vítor Luciano Gonçalves
