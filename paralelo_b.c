@@ -1,8 +1,6 @@
 #include <stdio.h>
 #include "mpi.h"
 
-// Talvez seja útil:
-
 // Funções MPI podem ser chamadas somente
 // após MPI_Init
 // &
@@ -74,8 +72,8 @@ int main(int argc, char** argv) {
     // Redução para soma.
     MPI_Reduce(
         &soma, // operando: variável de cada processo que será utilizada na operação de redução especificada.
-        &total_soma, // resultado: variável onde será armazenada o resultado da operação sobre os operandos.
-        1, // quantidade de posições de memória das variáveis acima. Neste caso, 1 por não serem vetores.
+        &total_soma, // resultado: variável onde será armazenado o resultado da operação sobre os operandos.
+        1, // quantidade de posições de memória das variáveis acima. Neste caso, 1, por não serem vetores.
         MPI_INT, // Tipo de operando e resultado.
         MPI_SUM, // Operação de redução.
         0, // Ranque do processo raiz.
@@ -104,7 +102,7 @@ int main(int argc, char** argv) {
         MPI_COMM_WORLD
     );
 
-    // Para o tempo
+    // Para a marcação do tempo.
     tempo_final = MPI_Wtime();
 
     // Processo 0, a raiz, imprime os resultados.
