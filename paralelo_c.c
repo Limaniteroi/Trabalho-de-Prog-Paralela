@@ -2,7 +2,7 @@
 #include <stdlib.h> // Para malloc
 #include <math.h>
 #include "mpi.h"
-#define TAM 1000
+#define TAM 1000000
 
 int somatorio(int vet_pedaco[], int tam_pedaco) {
     int soma = 0;

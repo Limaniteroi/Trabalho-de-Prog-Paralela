@@ -10,27 +10,27 @@
 
 // Total de número a serem somados, subtraídos e multiplicados.
 // Representa a carga de trabalho que deverá ser dividida entre os processos escravos.
-#define TAM 21
+#define TAM 1000000
 
 
 int main(int argc, char** argv) {
     // Ranque do processo mestre.
     int raiz = 0; 
     // Vetor com os operandos
-    long int vet[TAM];
+    int vet[TAM];
     // Vetor a partir do qual os escravos irão enviar seus resultados parciais.
-    long int vet_envia[TAM_ENVIA];
+    int vet_envia[TAM_ENVIA];
     // Resultados parciais inicializados com seus respectivos elementos neutros. 
     vet_envia[0] = 0; // soma_parcial 
     vet_envia[1] = 0; // sub_parcial
     vet_envia[2] = 1; // prod_parcial
-    // Vetor no qual o mestre receber as somas parciais.
-    long int* vet_recebe;
+    // Vetor no qual o mestre recebe as somas parciais.
+    int* vet_recebe;
     // Ranque de cada processo.
     int meu_ranque;
     // Total de processos que estão a executar este programa.
     int num_procs;
-    // Variáveis para controllar subintervalos onde cada escravo irá trabalhar.
+    // Variáveis para controlar subintervalos onde cada escravo irá trabalhar.
     int iteracoes_por_processo, lim_inf, lim_sup;
     // Para mensurar o tempo de execução
     double tempo_inicial, tempo_final;
@@ -68,7 +68,7 @@ int main(int argc, char** argv) {
     // Mestre aloca o vetor no qual ele irá receber os resultados parciais.
     // [soma_1, sub_1, prod_1, soma_2, sub_2, prod_2, ..., soma_(n-1), sub_(n-1), prod_(n-1)]
     if (meu_ranque == raiz) { 
-        vet_recebe = (long int *) malloc(num_procs * TAM_ENVIA * sizeof(long int));
+        vet_recebe = (int *) malloc(num_procs * TAM_ENVIA * sizeof(int));
     } else {
         // TODO: se TAM não for divisível por num_procs, então problema.
         // CORRIGIR DEPOIS.
@@ -89,14 +89,13 @@ int main(int argc, char** argv) {
 
 
         // Inicialização do vetor.
-        printf("Sou o processo %d e estou inicializando meus itens.\n", meu_ranque);
         for (int i = lim_inf; i < lim_sup; i++) {
             vet[i] = i + 1;
         }
 
         // Imprime o valor de cada elemento do vetor.
         for (int i = lim_inf; i < lim_sup; i++) {
-            printf("vet[%d] = %ld\n", i, vet[i]);
+            printf("vet[%d] = %d\n", i, vet[i]);
         }
 
         // Realiza as operações parciais, passando por todos os itens de vet 
@@ -112,10 +111,10 @@ int main(int argc, char** argv) {
     MPI_Gather(
         vet_envia, // vet_envia
         TAM_ENVIA, // cont_envia
-        MPI_LONG, // tipo_envia
+        MPI_INT, // tipo_envia
         vet_recebe, // vet_recebe
         TAM_ENVIA, // cont_recebe
-        MPI_LONG, // tipo_recebe
+        MPI_INT, // tipo_recebe
         raiz, // raiz
         MPI_COMM_WORLD // comunicador padrão
     );
@@ -124,17 +123,18 @@ int main(int argc, char** argv) {
     tempo_final = MPI_Wtime();
 
     // Processo mestre (raiz) faz o pós-processamento:
-    // i.e., soma as "somas parciais"
+    // i.e., soma as "somas parciais", 
+    //       soma as "subtrações parciais"
+    //       multiplica os "produtos parciais"
     if (meu_ranque == 0) {
-        for (int i = TAM_ENVIA; i < num_procs * TAM_ENVIA; i+=TAM_ENVIA) {
+        for (int i = 0; i < num_procs * TAM_ENVIA; i+=TAM_ENVIA) {
             vet_recebe[0] += vet_recebe[i];
             vet_recebe[1] += vet_recebe[i+1];
             vet_recebe[2] *= vet_recebe[i+2];
         }
-        printf("Sou o processo %d e o resultado final é:\n", meu_ranque);
-        printf("\tSoma: %ld\n", vet_recebe[0]);
-        printf("\tSubtração: %ld\n", vet_recebe[1]);
-        printf("\tProduto: %ld\n", vet_recebe[2]);
+        printf("\tSoma: %d\n", vet_recebe[0]);
+        printf("\tSubtração: %d\n", vet_recebe[1]);
+        printf("\tProduto: %d\n", vet_recebe[2]);
     }
 
     // Limpa pendências deixadas pelo MPI.

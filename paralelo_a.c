@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include "mpi.h"
-#define TAM 10
+#define TAM 1000000
 
 int main(int argc, char** argv){
 	int meu_ranque, num_procs, etiq = 0, i=0;
