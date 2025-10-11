@@ -2,7 +2,7 @@
 #include <time.h>
 
 int main () {
-    int x, soma=0, subtracao=0, mult=1, TAM = 1000000;
+    int x, soma=0, subtracao=0, mult=1, TAM = 1000;
     int vet[TAM];
     clock_t tempo_inicial, tempo_final, pulsos_decorridos;
     double tempo_em_segundos;
