@@ -12,26 +12,29 @@ int main(int argc, char** argv){
 	//Inicializa a biblioteca MPI
 	MPI_Init(&argc, &argv);
 	
-	//Começa a marcar o tempo
+	//Comeca a marcar o tempo
 	tempo_inicial = MPI_Wtime();	
 	
 	// Diz para cada processo o seu ranque
 	MPI_Comm_rank(MPI_COMM_WORLD, &meu_ranque);
 	
-	//Diz ao MPi o numero de processos que foi passado como parâmetro
+	//Diz ao MPi o numero de processos que foi passado como parametro
 	MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 	
-	//Inicialização do vetor
+	//Inicializacao do vetor
 	for(i=0; i<TAM; i++){
 		vet_envia[i] = i+1;
 	}
 	
 	if(meu_ranque == origem){
 		
+		// Imprime o valor de cada elemento do vetor.
+    	for (x=0;x<TAM;x++) {
+        	printf("vet[%d] = %d\n", x, vet[x]);
+    	}
 		
-		// Processo 0 (Mestre) ira enviar o vetor de numeros para cada processo escravo
+		// Processo 0 ira enviar o vetor de numeros para cada processo
 		for(i=1; i<num_procs; i++){
-            printf("oi1");
 			MPI_Send(vet_envia, TAM, MPI_INT, i, etiq, MPI_COMM_WORLD); 
 			MPI_Send(&operacao, 1, MPI_INT, i, etiq, MPI_COMM_WORLD);	
 			operacao++;
@@ -42,6 +45,7 @@ int main(int argc, char** argv){
 			// Verifica se chegou a mensagem no processo de origem
 			MPI_Probe(MPI_ANY_SOURCE, MPI_ANY_TAG, MPI_COMM_WORLD, &estado);
 			
+			//Verifica a tag de cada processo para colocar na variavel correta
 			if(estado.MPI_TAG == 1){
 				
 				MPI_Recv(&soma, 1, MPI_INT, estado.MPI_SOURCE, estado.MPI_TAG, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
@@ -74,13 +78,14 @@ int main(int argc, char** argv){
 		
 	
 	
-	// Processos escravos irão realizar as operações
+	// Processos irao realizar as operacoes
 	else{
 		
-		//Processos recebem o vetor que irão utilziar
+		//Processos recebem o vetor que irao utilziar
 		MPI_Recv(vet_recebe, TAM, MPI_INT, origem, etiq, MPI_COMM_WORLD, &estado);
 		MPI_Recv(&operacao, 1, MPI_INT, origem, etiq, MPI_COMM_WORLD, &estado);
 		
+		//Verifica a operacao a ser feita
 		if(operacao == 1){
 			
 			
@@ -111,6 +116,6 @@ int main(int argc, char** argv){
 	}		
 		
 	
-	// Limpa as pendências deixadas pelo MPI
+	// Limpa as pendencias deixadas pelo MPI
 	MPI_Finalize();
 }
