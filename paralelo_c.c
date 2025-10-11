@@ -1,111 +1,135 @@
 #include <stdio.h>
-#include <stdlib.h> // Para malloc
-#include <math.h>
-#include "mpi.h"
-#define TAM 1000
+#include <mpi.h>
 
-int somatorio(int vet_pedaco[], int tam_pedaco) {
-    int soma = 0;
-    for(int x = 0; x < tam_pedaco; x++){
-        soma += vet_pedaco[x];
-    }
-    return soma;
-}
-
-int multiplicacao(int vet_pedaco[], int tam_pedaco) {
-    int mult = 1; 
-    for(int x = 0; x < tam_pedaco; x++){
-        mult *= vet_pedaco[x];
-    }
-    return mult;
-}
-
-int subtracao(int vet_pedaco[], int tam_pedaco) {
-    int sub = 0;
-    for(int x = 0; x < tam_pedaco; x++){
-        sub -= vet_pedaco[x];
-    }
-    return sub;
-}
-
-int main (int argc, char *argv[]) {
-    int meu_ranque, num_procs;
-    double tempo_inicio, tempo_fim;
+int main(int argc, char *argv[]) {
+    int rank, size;
+    int TAM = 1000000;
+    int vet[TAM];
+    int soma = 0, subtracao = 0, mult = 1;
+    double tempo_inicial, tempo_final;
     
+    // MPI_Init: Inicializa o ambiente MPI
     MPI_Init(&argc, &argv);
-    MPI_Comm_rank(MPI_COMM_WORLD, &meu_ranque);
-    MPI_Comm_size(MPI_COMM_WORLD, &num_procs);
 
-    // 1. Definição do tamanho do pedaço
-    int quantidade_por_processo = TAM / num_procs;
-
-    // O restante deve ser tratado separadamente ou com uma abordagem mais robusta
-    // como padding (simplificado aqui para tamanhos exatos).
-    if (TAM % num_procs != 0) {
-        if (meu_ranque == 0) {
-            printf("Atenção: TAM (%d) não é divisível por num_procs (%d). Por favor entre com um número divisível.\n", TAM, num_procs);
+    tempo_inicial= MPI_WTime(); // Inicializa o temporizador MPI
+    
+    // MPI_Comm_rank: Obtém o identificador (rank) do processo atual
+    MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+    
+    // MPI_Comm_size: Obtém o número total de processos
+    MPI_Comm_size(MPI_COMM_WORLD, &size);
+    
+    // Verifica se há pelo menos 4 processos (produtor + 3 operações)
+    if (size < 4) {
+        if (rank == 0) {
+            printf("Este programa precisa de pelo menos 4 processos!\n");
+            printf("Execute com: mpirun -np 4 ./programa\n");
         }
         MPI_Finalize();
         return 1;
     }
-
-    int *vet = NULL;
-    int *vet_local = (int *)malloc(quantidade_por_processo * sizeof(int));
-
-    if (meu_ranque == 0) {
-        // 2. Inicialização do vetor (apenas pelo Mestre)
-        vet = (int *)malloc(TAM * sizeof(int));
-        for(int i = 0; i < TAM; i++){
-            vet[i] = i + 1; // Vetor de 1 a 1000
-        }
-        tempo_inicio = MPI_Wtime();
-    }
-
-    // 3. Distribuição dos dados (Scatter)
-    MPI_Scatter(vet, quantidade_por_processo, MPI_INT, 
-                vet_local, quantidade_por_processo, MPI_INT, 
-                0, MPI_COMM_WORLD);
-
-    // 4. Cálculo Local
-    int soma_local = somatorio(vet_local, quantidade_por_processo);
-    int mult_local = multiplicacao(vet_local, quantidade_por_processo);
-    int sub_local = subtracao(vet_local, quantidade_por_processo);
-
-    // 5. Agregação dos Resultados (Reduce)
-    int soma_global, mult_global, sub_global;
-
-    // A. Reduce para SOMA
-    MPI_Reduce(&soma_local, &soma_global, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-
-    // B. Reduce para MULTIPLICAÇÃO
-    MPI_Reduce(&mult_local, &mult_global, 1, MPI_INT, MPI_PROD, 0, MPI_COMM_WORLD);
-
-    // C. Reduce para SUBTRAÇÃO (usando MPI_SUM para somar os negativos)
-    // Subtração total = vet[0] - vet[1] - vet[2]... 
-    // Se somarmos os 'sub_local' que já vieram negativos, obtemos o resultado total (excluindo a primeira operação).
-    MPI_Reduce(&sub_local, &sub_global, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-
-
-    if (meu_ranque == 0) {
-        tempo_fim = MPI_Wtime();
+    
+    // ==================== PROCESSO 0: PRODUTOR ====================
+    if (rank == 0) {
+        printf("=== PROCESSO %d: PRODUTOR ===\n", rank);
         
-        // A subtração agregada (sub_global) é: -vet[1] - vet[2] - ... - vet[999].
-        // O valor correto é: vet[0] + sub_global.
-        // Como o vetor começa em 1, vet[0] = 1.
-        int sub_total = 1 + sub_global; 
-
-        printf("\n--- Resultados ---\n");
-        printf("Soma Total = %d\n", soma_global);
-        printf("Subtracao Total (1 - 2 - 3 ... - 1000) = %d\n", sub_total);
-        printf("Multiplicacao Total = %d\n", mult_global);
-        printf("Tempo gasto = %3.6f segundos.\n", tempo_fim - tempo_inicio);
+        // Inicializa o vetor
+        for (int x = 0; x < TAM; x++) {
+            vet[x] = x + 1;
+        }
+        
+        // Exibe o vetor
+        printf("Vetor inicializado:\n");
+        for (int x = 0; x < TAM; x++) {
+            printf("vet[%d] = %d\n", x, vet[x]);
+        }
+        printf("\n");
+        
+        // MPI_Send: Envia o vetor para o próximo processo (rank 1)
+        // Parâmetros: buffer, tamanho, tipo, destino, tag, comunicador
+        MPI_Send(vet, TAM, MPI_INT, 1, 0, MPI_COMM_WORLD);
+        printf("Processo %d: Vetor enviado para processo 1\n\n", rank);
     }
     
-    free(vet_local);
-    if (meu_ranque == 0) {
-        free(vet);
+    // ==================== PROCESSO 1: SOMA ====================
+    else if (rank == 1) {
+        printf("=== PROCESSO %d: CALCULA SOMA ===\n", rank);
+        
+        // MPI_Recv: Recebe o vetor do processo anterior (rank 0)
+        // Parâmetros: buffer, tamanho, tipo, origem, tag, comunicador, status
+        MPI_Recv(vet, TAM, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Processo %d: Vetor recebido do processo 0\n", rank);
+        
+        // Realiza a operação de SOMA
+        for (int x = 0; x < TAM; x++) {
+            soma = soma + vet[x];
+        }
+        printf("Processo %d: Soma calculada = %d\n\n", rank, soma);
+        
+        // Envia o vetor para o próximo processo (rank 2)
+        MPI_Send(vet, TAM, MPI_INT, 2, 0, MPI_COMM_WORLD);
+        printf("Processo %d: Vetor enviado para processo 2\n", rank);
+        
+        // Envia o resultado da soma para o processo final (rank 3)
+        MPI_Send(&soma, 1, MPI_INT, 3, 1, MPI_COMM_WORLD);
+        printf("Processo %d: Resultado da soma enviado para processo 3\n\n", rank);
     }
     
+    // ==================== PROCESSO 2: SUBTRAÇÃO ====================
+    else if (rank == 2) {
+        printf("=== PROCESSO %d: CALCULA SUBTRAÇÃO ===\n", rank);
+        
+        // Recebe o vetor do processo 1
+        MPI_Recv(vet, TAM, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Processo %d: Vetor recebido do processo 1\n", rank);
+        
+        // Realiza a operação de SUBTRAÇÃO
+        for (int x = 0; x < TAM; x++) {
+            subtracao = subtracao - vet[x];
+        }
+        printf("Processo %d: Subtração calculada = %d\n\n", rank, subtracao);
+        
+        // Envia o vetor para o próximo processo (rank 3)
+        MPI_Send(vet, TAM, MPI_INT, 3, 0, MPI_COMM_WORLD);
+        printf("Processo %d: Vetor enviado para processo 3\n", rank);
+        
+        // Envia o resultado da subtração para o processo final
+        MPI_Send(&subtracao, 1, MPI_INT, 3, 2, MPI_COMM_WORLD);
+        printf("Processo %d: Resultado da subtração enviado para processo 3\n\n", rank);
+    }
+    
+    // ==================== PROCESSO 3: MULTIPLICAÇÃO E RESULTADO FINAL ====================
+    else if (rank == 3) {
+        printf("=== PROCESSO %d: CALCULA MULTIPLICAÇÃO E EXIBE RESULTADOS ===\n", rank);
+        
+        // Recebe o vetor do processo 2
+        MPI_Recv(vet, TAM, MPI_INT, 2, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Processo %d: Vetor recebido do processo 2\n", rank);
+        
+        // Realiza a operação de MULTIPLICAÇÃO
+        for (int x = 0; x < TAM; x++) {
+            mult = mult * vet[x];
+        }
+        printf("Processo %d: Multiplicação calculada = %d\n\n", rank, mult);
+        
+        // Recebe os resultados dos processos anteriores
+        MPI_Recv(&soma, 1, MPI_INT, 1, 1, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Processo %d: Resultado da soma recebido do processo 1\n", rank);
+        
+        MPI_Recv(&subtracao, 1, MPI_INT, 2, 2, MPI_COMM_WORLD, MPI_STATUS_IGNORE);
+        printf("Processo %d: Resultado da subtração recebido do processo 2\n\n", rank);
+        
+        // Exibe todos os resultados finais
+        tempo_final = MPI_Wtime(); // Finaliza o temporizador MPI
+        printf("Soma          = %d\n", soma);
+        printf("Subtração     = %d\n", subtracao);
+        printf("Multiplicação = %d\n", mult);
+        printf("Foram gastos %3.6f segundos para calcular os resultados acima.\n",
+            tempo_final - tempo_inicial);
+    }
+    
+    // MPI_Finalize: Finaliza o ambiente MPI
     MPI_Finalize();
+    
     return 0;
 }
