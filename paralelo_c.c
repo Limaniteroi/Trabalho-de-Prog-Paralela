@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     // MPI_Init: Inicializa o ambiente MPI
     MPI_Init(&argc, &argv);
 
-    tempo_inicial= MPI_WTime(); // Inicializa o temporizador MPI
+    tempo_inicial= MPI_Wtime(); // Inicializa o temporizador MPI
     
     // MPI_Comm_rank: Obtém o identificador (rank) do processo atual
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
