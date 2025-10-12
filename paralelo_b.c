@@ -65,7 +65,11 @@ int main(int argc, char** argv) {
         //
         // [lim_inf, lim_sup)
         lim_inf = (meu_ranque - 1) * iteracoes_por_processo;
-        lim_sup = (meu_ranque) * iteracoes_por_processo;
+        lim_sup = meu_ranque != (num_procs - 1) 
+            ? (meu_ranque) * iteracoes_por_processo 
+            : TAM; // O escravo de maior ranque itera até o final,
+            // de modo que o programa funciona mesmo quando TAM, não é
+            // divisível pelo número de escravos.
 
         // Inicialização do vetor.
         for (int i = lim_inf; i < lim_sup; i++) {
@@ -115,9 +119,8 @@ int main(int argc, char** argv) {
         printf("Subtração: %d\n", vet_recebe[1]);
         printf("Produto: %d\n", vet_recebe[2]);
         printf(
-            "Foram gastos %3.6f segundos para calcular os resultados acima com um precisão de %3.3e segundos\n",
-            tempo_final - tempo_inicial,
-            MPI_Wtick()
+            "Foram gastos %3.6f segundos\n",
+            tempo_final - tempo_inicial
         );
         
     }
