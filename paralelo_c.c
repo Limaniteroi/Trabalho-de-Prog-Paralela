@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
     int rank, size;
-    int TAM = 1000000;
+    int TAM = 1000;
     int vet[TAM];
     int soma = 0, subtracao = 0, mult = 1;
     double tempo_inicial, tempo_final;
