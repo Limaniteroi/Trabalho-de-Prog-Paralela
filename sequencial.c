@@ -2,7 +2,7 @@
 #include <time.h>
 
 int main () {
-    int x, soma=0, subtracao=0, mult=1, TAM = 1000;
+    int x, soma=0, subtracao=0, mult=1, TAM = 1000000;
     int vet[TAM];
     clock_t tempo_inicial, tempo_final, pulsos_decorridos;
     double tempo_em_segundos;
@@ -38,5 +38,5 @@ int main () {
     printf("Soma = %d\n", soma);
     printf("Subtracao = %d\n", subtracao);
     printf("Multiplicacao = %d\n", mult);
-    printf("Foram gastos %3.6f segundos.\n", tempo_em_segundos);
+    printf("Foram gastos %.17lf segundos.\n", tempo_em_segundos);
 }

@@ -98,9 +98,6 @@ int main(int argc, char** argv) {
         MPI_COMM_WORLD // comunicador padrão
     );
     
-    // Para a marcação do tempo.
-    tempo_final = MPI_Wtime();
-
     // Processo mestre (raiz) faz o pós-processamento:
     // i.e., soma as "somas parciais", 
     //       soma as "subtrações parciais"
