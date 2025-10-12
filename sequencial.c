@@ -33,10 +33,10 @@ int main () {
 
     tempo_final = clock();
     pulsos_decorridos = tempo_final - tempo_inicial;
-    tempo_em_segundos = pulsos_decorridos / CLOCKS_PER_SEC;
+    tempo_em_segundos = (double)pulsos_decorridos / CLOCKS_PER_SEC;
 
     printf("Soma = %d\n", soma);
     printf("Subtracao = %d\n", subtracao);
     printf("Multiplicacao = %d\n", mult);
-    printf("Foram gastos %.17lf segundos.\n", tempo_em_segundos);
+    printf("Foram gastos %3.17lf segundos.\n", tempo_em_segundos);
 }
