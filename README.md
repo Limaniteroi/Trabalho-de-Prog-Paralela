@@ -31,7 +31,7 @@ Nesta versão, a execução é limitada a quatro processos. Cada um dos três pr
 
 #### **b) Versão com Mestre/Escravo e Comunicação Coletiva**
 
-Esta implementação utiliza um modelo mestre/escravo com um número variável de processos. A divisão das tarefas é feita de forma balanceada, e a comunicação é realizada através de operações MPI_Gathercoletar os resultados de forma eficiente.
+Esta implementação utiliza um modelo mestre/escravo com um número variável de processos. A divisão das tarefas é feita de forma balanceada, e a comunicação é realizada através de operações MPI_Gather para coletar os resultados de forma eficiente.
 
 #### **c) Versão com Modelo Pipeline**
 
@@ -76,7 +76,7 @@ mpirun -np 8 paralelo_b
 mpirun -np 4 paralelo_c
 
 # Executar todos
-
+Use o arquivo `compile_all.sh`
 
 ```
 
