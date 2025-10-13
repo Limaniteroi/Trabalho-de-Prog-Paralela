@@ -31,7 +31,7 @@ Nesta versão, a execução é limitada a quatro processos. Cada um dos três pr
 
 #### **b) Versão com Mestre/Escravo e Comunicação Coletiva**
 
-Esta implementação utiliza um modelo mestre/escravo com um número variável de processos. A divisão das tarefas é feita de forma balanceada, e a comunicação é realizada através de operações coletivas do MPI (como `MPI_Scatter` e `MPI_Reduce`) para distribuir os dados e coletar os resultados de forma eficiente.
+Esta implementação utiliza um modelo mestre/escravo com um número variável de processos. A divisão das tarefas é feita de forma balanceada, e a comunicação é realizada através de operações MPI_Gathercoletar os resultados de forma eficiente.
 
 #### **c) Versão com Modelo Pipeline**
 
@@ -54,10 +54,10 @@ Para compilar e executar o código, você precisará de um compilador C e de uma
     Use o compilador `mpicc` para compilar o arquivo C.
 
     ```bash
-    mpicc <nome_do_arquivo>.c -o <nome_do_executavel>
+    mpicc -o <nome_do_executavel> <nome_do_arquivo>.c 
     ```
 
-    *Exemplo: `mpicc versao_a.c -o versao_a`*
+    *Exemplo: `mpicc -o versao_a versao_a.c `*
 
 -----
 
@@ -67,13 +67,13 @@ Use o comando `mpirun` ou `mpiexec`, especificando o número de processos (`-np`
 
 ```bash
 # Executar a Versão a) com 4 processos
-mpirun -np 4 ./versao_a
+mpirun -np 4 versao_a
 
 # Executar a Versão b) com 8 processos (exemplo)
-mpirun -np 8 ./versao_b
+mpirun -np 8 versao_b
 
 # Executar a Versão c) com 5 processos (exemplo)
-mpirun -np 5 ./versao_c
+mpirun -np 5 versao_c
 ```
 
 ### **Resultados Obtidos**
@@ -82,10 +82,10 @@ A tabela abaixo resume os resultados de desempenho para cada uma das versões pa
 
 | Versão | Tempo de Execução | Speedup | Eficiência |
 | :--- | :--- | :--- | :--- |
-| **Sequencial** | [Tempo em ms] | 1.0 | 1.0 |
-| **Versão a) (4 processos)** | [Tempo em ms] | [Speedup] | [Eficiência] |
-| **Versão b) (N processos)** | [Tempo em ms] | [Speedup] | [Eficiência] |
-| **Versão c) (Pipeline)** | [Tempo em ms] | [Speedup] | [Eficiência] |
+| **Sequencial** | 1,17E-03 | - | - |
+| **Versão a) (4 processos)** | 5,53E-05 | 18,08 | 451,88% |
+| **Versão b) (4 processos)** | 6,10E-04 | 1,93 | 48,18% |
+| **Versão c) (4 processos)** | 1,87E-03 | 0,63 | 15,72% |
 
 *Os valores serão preenchidos após a execução e análise dos programas.*
 
