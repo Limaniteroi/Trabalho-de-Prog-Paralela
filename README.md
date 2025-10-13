@@ -92,8 +92,8 @@ A tabela abaixo resume os resultados de desempenho para cada uma das versões pa
 | **Versão c) (4 processos)** | 1,87E-03 | 0,63 | 15,72% |
 -----
 Para todos os programas (1000):
-Soma = 500500
-Subtração = -500500
+Soma = 500500 ; 
+Subtração = -500500 ; 
 Multiplicação = 0
 
 Os valores foram obtidos através da média de 10 execuções de cada uma das versões.
