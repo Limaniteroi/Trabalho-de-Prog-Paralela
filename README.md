@@ -63,17 +63,21 @@ Para compilar e executar o código, você precisará de um compilador C e de uma
 
 ### **Como Executar**
 
-Use o comando `mpirun` ou `mpiexec`, especificando o número de processos (`-np`) para cada versão.
+Use o comando `mpirun`, especificando o número de processos (`-np`) para cada versão.
 
 ```bash
 # Executar a Versão a) com 4 processos
-mpirun -np 4 versao_a
+mpirun -np 4 paralelo_a
 
 # Executar a Versão b) com 8 processos (exemplo)
-mpirun -np 8 versao_b
+mpirun -np 8 paralelo_b
 
-# Executar a Versão c) com 5 processos (exemplo)
-mpirun -np 5 versao_c
+# Executar a Versão c) com 4 processos
+mpirun -np 4 paralelo_c
+
+# Executar todos
+
+
 ```
 
 ### **Resultados Obtidos**
