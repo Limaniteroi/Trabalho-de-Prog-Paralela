@@ -91,8 +91,7 @@ A tabela abaixo resume os resultados de desempenho para cada uma das versões pa
 | **Versão b) (4 processos)** | 6,10E-04 | 1,93 | 48,18% |
 | **Versão c) (4 processos)** | 1,87E-03 | 0,63 | 15,72% |
 
-*Os valores foram obtidos através da média de 10 execuções de cada uma das versões.*
-Verificar em `tempos.py`
+*Os valores foram obtidos através da média de 10 execuções de cada uma das versões. Verifique em `tempos.py`*
 -----
 
 ### **Autores**
