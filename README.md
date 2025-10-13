@@ -10,7 +10,7 @@ O objetivo do projeto é comparar o desempenho de diferentes estratégias de par
 
 ### **Descrição do Problema**
 
-O código original, presente no arquivo `main_sequencial.c` (ou similar), realiza as seguintes operações em um vetor de 1000 elementos:
+O código original, presente no arquivo `sequencial.c`, realiza as seguintes operações em um vetor de 1000 elementos:
 
   * Inicialização do vetor com valores de `x + 1`.
   * Cálculo da soma de todos os elementos.
