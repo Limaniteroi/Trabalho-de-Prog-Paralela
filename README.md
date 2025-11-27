@@ -2,11 +2,11 @@
 
 Este repositório documenta dois projetos de programação paralela desenvolvidos com o objetivo de analisar e comparar diferentes estratégias de paralelização para tarefas computacionais distintas.
 
-O trabalho foi desenvolvido por **Marianna**, Rodrigo e João Vitor**.
+O trabalho foi desenvolvido por **Marianna, Rodrigo e João Vitor**.
 
 ### **Análise de Paralelismo com MPI**
 
-Este repositório contém as implementações de um programa em C para realizar operações matemáticas (soma, subtração e multiplicação) em um vetor, utilizando a biblioteca MPI (Message Passing Interface) para processamento paralelo. O trabalho foi desenvolvido por Marianna, Rodrigo e João Vitor.
+Este repositório contém as implementações de um programa em C para realizar operações matemáticas (soma, subtração e multiplicação) em um vetor, utilizando a biblioteca MPI (Message Passing Interface) para processamento paralelo. 
 
 O objetivo do projeto é comparar o desempenho de diferentes estratégias de paralelização para a mesma tarefa computacional.
 
@@ -104,10 +104,14 @@ Soma = 500500 ;
 Subtração = -500500 ; 
 Multiplicação = 0
 
+-----
+
 ### **Multiplicação de Matrizes com OpenMP**
 
 ### **Descrição do Problema**
 O segundo projeto foca na paralelização da multiplicação de matrizes (Matrix Multiplication) utilizando a API OpenMP para programação em memória compartilhada.O objetivo é desenvolver um programa que multiplique duas matrizes quadradas de dimensões 1000 x 1000 cujos elementos são todos iguais a 1.  A análise deve explorar o impacto do número de threads e dos diferentes mecanismos de escalonamento (schedule) no desempenho.
+
+-----
 
 ### **Versões Paralelas (OpenMP)**
 A paralelização é baseada na divisão do trabalho entre $P$ threads utilizando a diretiva $\text{OpenMP}$. 
@@ -119,6 +123,7 @@ A análise exige a execução da mesma rotina com diferentes parâmetros:
 | Método de Escalonamento (static) Estático, (dynamic) Dinâmico e (guided) Guiado |
 -----
 
+-----
 
 ### **Requisitos e Compilação (OpenMP)**
 Para compilar e executar o código, é necessário um compilador C que suporte OpenMp (como GCC ou Clang).
@@ -129,6 +134,8 @@ Para compilar e executar o código, é necessário um compilador C que suporte O
 sudo apt-get install gcc
 ```
 
+-----
+
 ### Compile o código:
 
 Use o flag -fopenmp para habilitar a compilação paralela.
@@ -137,6 +144,7 @@ gcc -o <nome_do_executavel> <nome_do_arquivo>.c -fopenmp
 # Exemplo: gcc -o matmul matmul.c -fopenmp
 ```
 
+-----
 ### Execute:
 Defina o número de threads (P) usando a variável de ambiente OMP_NUM_THREADS antes de executar.
 
@@ -145,9 +153,3 @@ Defina o número de threads (P) usando a variável de ambiente OMP_NUM_THREADS a
 export OMP_NUM_THREADS=4
 ./matmul
 ```
-
-### Resultados Obtidos (OpenMP)
-
-
-  * Rodrigo Ramos Vinagre Cavalcanti de Carvalho
-  * João Vítor Luciano Gonçalves
