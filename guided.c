@@ -24,7 +24,7 @@ int main()
     
     double t_inicio = omp_get_wtime();
 
-    #pragma omp parallel for schedule (guided) num_threads(4) private(j, k, sum)   
+    #pragma omp parallel for schedule (guided) num_threads(16) private(j, k, sum)   
     for (int i = 0; i < 1000; i++)
     {
 
@@ -42,9 +42,16 @@ int main()
         }
     }
         
-        double t_fim = omp_get_wtime();
-        printf("Tempo de execucação: %f segundos\n", t_fim-t_inicio);
-        printf("%d\n", C[0][0]);
-        return 0;
+    double t_fim = omp_get_wtime();
+    printf("Tempo de execucação: %f segundos\n", t_fim-t_inicio);
+    //printf("%d\n", C[0][0]);
+
+    FILE *f = fopen("tempo_guided_16.txt", "a");
+    if (f) {
+        fprintf(f, "%f\n", t_fim - t_inicio);
+        fclose(f);
+    }
+
+    return 0;
 }
 
