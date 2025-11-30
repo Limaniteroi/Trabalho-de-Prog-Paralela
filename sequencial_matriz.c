@@ -41,5 +41,11 @@ int main(void){
 
     printf("Tempo de execução: %f segundos\n", tempo_decorrido);
 
+    FILE *f = fopen("tempo_sequencial.txt", "a");
+    if (f) {
+        fprintf(f, "%f\n", tempo_decorrido);
+        fclose(f);
+    }
+
     return 0;
 }

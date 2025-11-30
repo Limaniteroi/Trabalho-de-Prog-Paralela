@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
 
     tempo_inicial = omp_get_wtime();
         
-    #pragma omp parallel for private(j, k, soma_produto) schedule (static) num_threads(2)
+    #pragma omp parallel for private(j, k, soma_produto) schedule (static) num_threads(16)
 
     for (i = 0; i < tamanho; ++i) {
         for(j = 0; j < tamanho; j++ ){
@@ -42,7 +42,13 @@ int main(int argc, char *argv[]) {
     tempo_decorrido = tempo_final - tempo_inicial;
 
     printf("Tempo de execução: %f segundos\n", tempo_decorrido);
-    printf("Resultado esperado (matriz_resultado[0][0]): %d\n", matriz_resultado[0][0]);
+    //printf("Resultado esperado (matriz_resultado[0][0]): %d\n", matriz_resultado[0][0]);
+
+    FILE *f = fopen("tempo_estatico_16.txt", "a");
+    if (f) {
+        fprintf(f, "%f\n", tempo_decorrido);
+        fclose(f);
+    }
 
     return 0;
 }

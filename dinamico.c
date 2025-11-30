@@ -40,7 +40,13 @@ int main(void){
     tempo_decorrido = tempo_final - tempo_inicial;
 
     printf("Tempo de execução: %f segundos\n", tempo_decorrido);
-    printf("%d\n", matriz_resultado[0][0]);
+    //printf("%d\n", matriz_resultado[0][0]);
+
+    FILE *f = fopen("tempo_dinamico_16.txt", "a");
+    if (f) {
+        fprintf(f, "%f\n", tempo_decorrido);
+        fclose(f);
+    }
 
     return 0;
 }
