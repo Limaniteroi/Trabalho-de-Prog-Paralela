@@ -2,7 +2,7 @@
 
 Este repositório documenta dois projetos de programação paralela desenvolvidos com o objetivo de analisar e comparar diferentes estratégias de paralelização para tarefas computacionais distintas.
 
-O trabalho foi desenvolvido por **Marianna, Rodrigo e João Vitor**.
+Os trabalhos foram desenvolvidos por **Marianna, Rodrigo e João Vitor**.
 
 ## **Análise de Paralelismo com MPI**
 
