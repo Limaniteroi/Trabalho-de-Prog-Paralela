@@ -121,8 +121,20 @@ A análise exige a execução da mesma rotina com diferentes parâmetros:
 | :--- | :--- |
 | Número de Threads  | 2, 4, 8, e 16 |
 | Método de Escalonamento | (static) Estático, (dynamic) Dinâmico e (guided) Guiado |
------
 
+Três versões do programa sequencial foram implementadas, cada uma utilizando uma política diferente de escalonamento de laços com OpenMP para paralelizar a multiplicação de duas matrizes 1000×1000.
+
+##### Versão com Escalonamento Estático 
+Nesta versão, as matrizes são inicializadas com valores 1 e a multiplicação é paralelizada com a diretiva #pragma omp parallel for schedule(static) num_threads(16).​
+O laço externo sobre as linhas da matriz resultado é dividido em blocos fixos e atribuídos antecipadamente às 16 threads, que calculam as entradas da matriz resultado e, ao final, o tempo total de execução é medido e salvo em um arquivo de texto para análise de desempenho.​
+
+##### Versão com Escalonamento Dinâmico 
+Aqui as matrizes também são preenchidas com 1 e a multiplicação é feita em paralelo com #pragma omp parallel for schedule(dynamic, 100) num_threads(16).​
+O laço externo é particionado em blocos de 100 iterações, e esses blocos são atribuídos dinamicamente às threads à medida que terminam seu trabalho, permitindo que threads ociosas assumam novos blocos até completar todas as linhas, com o tempo de execução sendo calculado e registrado em um arquivo de texto.​
+
+##### Versão com Escalonamento Guided 
+Nesta versão, as matrizes A e B são inicializadas com 1, e a multiplicação é paralelizada com #pragma omp parallel for schedule(guided) num_threads(16).​
+As iterações do laço externo começam em blocos maiores e vão diminuindo de tamanho automaticamente, conforme o guided scheduling, enquanto as threads calculam as entradas da matriz C e, ao final, o programa mede o tempo de execução e o armazena em arquivo de texto.
 -----
 
 ### **Requisitos e Compilação (OpenMP)**
