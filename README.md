@@ -137,12 +137,19 @@ Para compilar e executar o código, é necessário um compilador C que suporte O
 sudo apt-get install gcc
 ```
 
-### Compile o código:
+### Execute:
+Defina o número de threads (P) usando a variável de ambiente OMP_NUM_THREADS antes de executar.
+
+```bash
+# Executar com 4 threads
+export OMP_NUM_THREADS=4
+```
+
+### Execute o código:
 
 Use o flag -fopenmp para habilitar a compilação paralela.
 ```bash
 gcc -o <nome_do_executavel> <nome_do_arquivo>.c -fopenmp
-# Exemplo: gcc -o matmul matmul.c -fopenmp
 
 # Executar a Versão de Escalonamento Estático
 gcc -o teste estático.c -fopenmp
@@ -152,13 +159,4 @@ gcc -o teste dinamico.c -fopenmp
 
 # Executar a Versão de Escalonamento Guided
 gcc -o teste guided.c -fopenmp
-```
-
-### Execute:
-Defina o número de threads (P) usando a variável de ambiente OMP_NUM_THREADS antes de executar.
-
-```bash
-# Executar com 4 threads
-export OMP_NUM_THREADS=4
-./matmul
 ```
