@@ -86,16 +86,6 @@ Use o arquivo compile_all.sh
 
 ### **Resultados Obtidos**
 
-A tabela abaixo resume os resultados de desempenho para cada uma das versões paralelas, comparadas à execução sequencial.
-
-| Versão | Tempo de Execução | Speedup | Eficiência |
-| :--- | :--- | :--- | :--- |
-| **Sequencial** | 1,17E-03 | - | - |
-| **Versão a) (4 processos)** | 5,53E-05 | 18,08 | 451,88% |
-| **Versão b) (4 processos)** | 6,10E-04 | 1,93 | 48,18% |
-| **Versão c) (4 processos)** | 1,87E-03 | 0,63 | 15,72% |
------
-
 Os valores foram obtidos através da média de 10 execuções de cada uma das versões.
 Verifique em `tempos.py`
 
@@ -134,7 +124,8 @@ O laço externo é particionado em blocos de 100 iterações, e esses blocos sã
 
 ##### Versão com Escalonamento Guided 
 Nesta versão, as matrizes A e B são inicializadas com 1, e a multiplicação é paralelizada com #pragma omp parallel for schedule(guided) num_threads(16).​
-As iterações do laço externo começam em blocos maiores e vão diminuindo de tamanho automaticamente, conforme o guided scheduling, enquanto as threads calculam as entradas da matriz C e, ao final, o programa mede o tempo de execução e o armazena em arquivo de texto.
+As iterações do laço externo começam em blocos maiores e vão diminuindo de tamanho automaticamente, conforme o guided scheduling, enquanto as threads calculam as entradas da matriz C e, ao final, o programa mede o tempo de execução e o armazena no arquivo de texto.
+
 -----
 
 ### **Requisitos e Compilação (OpenMP)**
@@ -152,6 +143,15 @@ Use o flag -fopenmp para habilitar a compilação paralela.
 ```bash
 gcc -o <nome_do_executavel> <nome_do_arquivo>.c -fopenmp
 # Exemplo: gcc -o matmul matmul.c -fopenmp
+
+# Executar a Versão de Escalonamento Estático
+gcc -o teste estático.c -fopenmp
+
+# Executar a Versão de Escalonamento Dinâmico
+gcc -o teste dinamico.c -fopenmp
+
+# Executar a Versão de Escalonamento Guided
+gcc -o teste guided.c -fopenmp
 ```
 
 ### Execute:
